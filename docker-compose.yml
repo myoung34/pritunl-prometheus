@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:4.0
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-seed:/docker-entrypoint-initdb.d
+    environment:
+      - MONGO_INITDB_DATABASE=foo
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      - BIND_HOST=0.0.0.0
+      - BIND_PORT=3000
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN
+      - AWS_REGION=$AWS_REGION
+      - AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+      - MONGO_URI=mongodb://mongo:27017/foo
+    depends_on:
+      - mongo
+volumes:
+  mongo-seed:
