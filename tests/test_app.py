@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import pytest
 from unittest import mock
 from app import create_app
@@ -8,16 +9,19 @@ from config import Config
 class TestConfig(Config):
     MONGO_URI = "mongodb://mongo:27017/foo"
 
-class foo():
+
+class FakeMongo():
     class db():
         class users():
             def count_documents(args, **kwargs):
                 if 'disabled' in args and args['disabled']:
                     return 2
                 return 4
+
         class clients():
             def count_documents(args, **kwargs):
                 return 2
+
 
 @pytest.fixture
 def client():
@@ -28,7 +32,7 @@ def client():
         yield client
 
 
-@mock.patch('app.main.routes.mongo', new=foo)
+@mock.patch('app.main.routes.mongo', new=FakeMongo)
 def test_metrics(
     client
 ):
