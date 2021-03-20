@@ -26,6 +26,6 @@ jobs:
     - name: pylint
       run: pylint --rcfile .pylintrc -r n app
     - name: set pythonpath
-      run: echo "::set-env name=PYTHONPATH::$(pwd)"
+      run: echo 'PYTHONPATH='$(pwd) >> $GITHUB_ENV
     - name: pytest
       run: py.test --cov-config .coveragerc --cov app --cov-report term-missing --cov-report xml --junitxml junit.xml tests
